@@ -12,8 +12,11 @@ Asignatura: Fundamentos de Redes.
 Integrantes:
 
 Leilany Aislinn Sanchez Reyes (230110166)
+
 Andrea Jacob Salas (230110449)
+
 Diego Lozano Camargo (230110530)
+
 Sebastian Perez Perez (230110689)
 
 
