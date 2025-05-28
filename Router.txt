@@ -1,0 +1,65 @@
+*Router*
+* - Configuración Basica. * 
+
+Router1> enable
+Router1# configure terminal
+
+# Cambiar el nombre del router
+Router1(config)# hostname RC
+RC(config) banner motd  "Acceso restringido para el Router"
+
+# Desactivar la búsqueda de DNS para evitar errores por comandos mal escritos
+RC(config)# no ip domain-lookup
+
+# Configurar contraseña de acceso al modo EXEC privilegiado
+RC(config)# enable secret mason
+
+# Configurar consola
+RC(config)# line console 0
+RC(config-line)# password javier
+RC(config-line)# login
+RC(config-line)# exit
+
+# Configurar acceso remoto por Telnet o SSH (VTY)
+RC(config)# line vty 0 4
+RC(config-line)# password javier
+RC(config-line)# login
+RC(config-line)# exit
+
+RC(config)# ip domain-name ejemplo.com
+RC(config)# username admin secret admin123
+
+# Generar claves RSA (tamaño recomendado: mínimo 1024 bits)
+RC(config)# crypto key generate rsa
+How many bits in the modulus [512]: 1024
+
+# Habilitar solo SSH en las líneas VTY
+RC(config)# line vty 0 4
+RC(config-line)# transport input ssh
+RC(config-line)# login local
+RC(config-line)# exit, dame todas estas configuraciones para un switch
+# MODO USUARIO
+Router> enable
+
+# MODO PRIVILEGIADO
+Router# configure terminal
+
+# MODO CONFIGURACIÓN GLOBAL
+Router(config)# hostname RD
+RD(config)# ipv6 unicast-routing
+
+# MODO INTERFAZ
+RC(config)# interface g0/1
+RC(config-if)# description "to LAND"
+RC(config-if)# ip address 172.16.0.93 255.255.255.224
+RC(config-if)# ipv6 address 2001:db8:1:c::/64
+RC(config-if)# ipv6 enable 
+RC(config-if)# no shutdown
+RC(config-if)# exit
+
+# REGRESAMOS A MODO CONFIGURACIÓN GLOBAL
+RC(config)# exit
+
+# MODO PRIVILEGIADO (verificación)
+RC# show ip interface brief     # IPv4
+RC# show ipv6 interface brief   # IPv6

@@ -1,0 +1,68 @@
+Switch> enable
+Switch# configure terminal
+
+# Cambiar el nombre del switch
+Switch(config)# hostname SC
+SC(config) banner motd  "Acceso restringido al Switch Solo personal autorizado. El uso indebido será sancionado."
+
+# Desactivar la búsqueda de DNS para evitar errores por comandos mal escritos
+SC(config)# no ip domain-lookup
+
+# Configurar contraseña de acceso al modo EXEC privilegiado
+SC(config)# enable secret mason
+
+# Configurar consola
+SC(config)# line console 0
+SC(config-line)# password javier
+SC(config-line)# login
+SC(config-line)# exit
+
+# Configurar acceso remoto por Telnet o SSH (VTY)
+SC(config)# line vty 0 4
+SC(config-line)# password javier
+SC(config-line)# login
+SC(config-line)# exit
+
+# Configurar dominio e usuario para SSH
+SC(config)# ip domain-name ejemplo.com
+SC(config)# username admin secret admin123
+
+# Generar claves RSA (tamaño recomendado: mínimo 1024 bits)
+SSCW1(config)# crypto key generate rsa
+How many bits in the modulus [512]: 1024
+
+# Habilitar solo SSH en las líneas VTY y autenticación local
+SC(config)# line vty 0 4
+SC(config-line)# transport input ssh
+SC(config-line)# login local
+SC(config-line)# exit
+# MODO USUARIO
+Switch> enable
+
+# MODO PRIVILEGIADO
+Switch# configure terminal
+
+# MODO CONFIGURACIÓN GLOBAL
+Switch(config)# sdm prefer dual-ipv4-and-ipv6 default
+Switch(config)# end
+Switch# reload   ← (esto reinicia el switch, necesario para aplicar el sdm prefer)
+
+# Una vez reiniciado, volvemos a configuración global
+Switch> enable
+Switch# configure terminal
+
+# Configuración de la interfaz VLAN 1
+Switch(config)# interface vlan1
+Switch(config-if)# description "to Admin"
+Switch(config-if)# ip address 172.16.0.94 255.255.255.224
+Switch(config-if)# ipv6 address 2001:db8:1:c::/64
+Switch(config-if)# ipv6 enable 
+Switch(config-if)# no shutdown
+Switch(config-if)# exit
+
+# REGRESAMOS A MODO CONFIGURACIÓN GLOBAL
+Switch(config)# exit
+
+# MODO PRIVILEGIADO (opcional: verificación)
+Switch# show ip interface brief
+Switch# show ipv6 interface brief
